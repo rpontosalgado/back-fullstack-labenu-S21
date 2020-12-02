@@ -1,2 +1,2 @@
-# labenu-S22-fullstack-back
+# back-fullstack-labenu-S21
 Backend do Projeto Full Stack para a Labenu
