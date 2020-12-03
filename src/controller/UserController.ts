@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import UserBusiness from "../business/UserBusiness";
 import BaseDatabase from "../data/BaseDatabase";
-import { UserInputDTO } from "../model/User";
+import { LoginInputDTO, UserInputDTO } from "../model/User";
 
 export class UserController {
   async signup(req: Request, res: Response): Promise<void> {
@@ -15,6 +15,26 @@ export class UserController {
       const token = await UserBusiness.createUser(input);
 
       res.status(201).send({ token });
+    } catch (error) {
+      const { code, message } = error;
+      res.status(code || 400).send({ message });
+    }
+
+    await BaseDatabase.destroyConnection();
+  }
+
+  async login(req: Request, res: Response): Promise<void> {
+    try {
+      const loginData: LoginInputDTO = {
+        input: req.body.input,
+        password: req.body.password
+      }
+
+      const token = await UserBusiness.getUserByEmailOrNickname(
+        loginData
+      );
+
+      res.status(200).send({ token });
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });

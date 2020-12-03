@@ -1,8 +1,9 @@
 import userDatabase, { UserDatabase } from "../data/UserDatabase";
 import BaseError from "../errors/BaseError";
 import ConflictError from "../errors/ConflictError";
+import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
-import { User, UserInputDTO } from "../model/User";
+import { LoginInputDTO, User, UserInputDTO } from "../model/User";
 import authenticator,{ Authenticator } from "../services/Authenticator";
 import hashManager, { HashManager } from "../services/HashManager";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
@@ -60,6 +61,41 @@ export class UserBusiness {
       if (error.message.includes("for key 'nickname'")) {
         throw new ConflictError("Nickname already in use");
       }
+
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getUserByEmailOrNickname(user: LoginInputDTO): Promise<string> {
+    try {
+      const { input, password } = user;
+
+      if (!input || !password) {
+        throw new UnprocessableEntityError("Missing unputs");
+      }
+
+      const userFromDB: User = await this.userDatabase.getUserByEmailOrNickname(input);
+
+      if (!userFromDB) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+
+      const hashCompare = await this.hashManager.compare(
+        password,
+        userFromDB.getPassword()
+      );
+
+      if (!hashCompare) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+
+      const accessToken = this.authenticator.generateToken({
+        id: userFromDB.getId()
+      });
+
+      return accessToken;
+    } catch (error) {
+      const { code, message } = error;
 
       throw new BaseError(code || 400, message);
     }

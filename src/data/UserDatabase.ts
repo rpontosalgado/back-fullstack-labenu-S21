@@ -20,6 +20,20 @@ export class UserDatabase extends BaseDatabase {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  async getUserByEmailOrNickname(input: string): Promise<User> {
+    try {
+      const result = await this.getConnection()
+        .select("*")
+        .from(UserDatabase.TABLE_NAME)
+        .where({ email: input })
+        .orWhere({ nickname: input });
+
+      return User.toUserModel(result[0]);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
 }
 
 export default new UserDatabase();
