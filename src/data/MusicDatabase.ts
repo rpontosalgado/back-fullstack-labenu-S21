@@ -16,10 +16,10 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 
-  async createGenre(genres: GenreDTO[]): Promise<void> {
+  async createGenre(genre: GenreDTO): Promise<void> {
     try {
       await this.getConnection()
-        .insert(genres)
+        .insert(genre)
         .into(this.tableNames.genres)
     } catch (error) {
        throw new Error(error.sqlMessage || error.message);
@@ -29,7 +29,10 @@ export class MusicDatabase extends BaseDatabase {
   async addGenresToMusic(musicGenres: MusicGenreDTO[]): Promise<void> {
     try {
       await this.getConnection()
-        .insert(musicGenres)
+        .insert(musicGenres.map((item: MusicGenreDTO) => ({
+          music_id: item.musicId,
+          genre_id: item.genreId
+        })))
         .into(this.tableNames.musicGenres)
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
@@ -52,3 +55,5 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 }
+
+export default new MusicDatabase();
