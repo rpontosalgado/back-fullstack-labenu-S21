@@ -24,9 +24,9 @@ export class MusicController {
     }
   }
 
-  async getMusic(req: Request, res: Response):Promise<void> {
+  async getUserMusic(req: Request, res: Response):Promise<void> {
     try {
-      const music: Music | Music[] = await MusicBusiness.getMusic(
+      const music: Music | Music[] = await MusicBusiness.getUserMusic(
         req.headers.authorization as string,
         req.params.id
       )

@@ -82,7 +82,7 @@ export class MusicBusiness {
     }
   }
 
-  async getMusic(token: string, musicId?: string): Promise<Music | Music[]> {
+  async getUserMusic(token: string, musicId?: string): Promise<Music | Music[]> {
     try {
       const userData: AuthenticationData = this.authenticator.getData(token);
 
