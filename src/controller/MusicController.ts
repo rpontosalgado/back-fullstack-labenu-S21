@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import MusicBusiness from "../business/MusicBusiness";
-import { MusicInputDTO } from "../model/Music";
+import { Music, MusicInputDTO } from "../model/Music";
 
 export class MusicController {
   async createMusic(req: Request, res: Response):Promise<void> {
@@ -23,4 +23,20 @@ export class MusicController {
       res.status(code || 400).send({ message });
     }
   }
+
+  async getMusic(req: Request, res: Response):Promise<void> {
+    try {
+      const music: Music | Music[] = await MusicBusiness.getMusic(
+        req.headers.authorization as string,
+        req.params.id
+      )
+
+      res.status(200).send({ music });
+    } catch (error) {
+      const { code, message } = error;
+      res.status(code || 400).send({ message });
+    }
+  }
 }
+
+export default new MusicController();
