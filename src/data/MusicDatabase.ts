@@ -54,6 +54,39 @@ export class MusicDatabase extends BaseDatabase {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  async getAllUserMusic(authorId: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(
+          `${this.tableNames.users} as u`,
+          'm.author_id',
+          'u.id'
+        )
+        .where("m.author_id", authorId)
+        .orderBy("m.date", "desc");
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getMusicById(musicId: string): Promise<Music> {
+    const result = await this.getConnection()
+      .select('m.*', 'u.name')
+      .from(`${this.tableNames.music} as m`)
+      .join(
+        `${this.tableNames.users} as u`,
+        'm.author_id',
+        'u.id'
+      )
+      .where("m.id", musicId);
+
+    return Music.toMusicModel(result[0]);
+  }
 }
 
 export default new MusicDatabase();

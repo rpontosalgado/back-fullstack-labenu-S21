@@ -1,5 +1,6 @@
 import musicDatabase, { MusicDatabase } from "../data/MusicDatabase";
 import BaseError from "../errors/BaseError";
+import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
 import { GenreDTO, Music, MusicGenreDTO, MusicInputDTO } from "../model/Music";
@@ -65,6 +66,40 @@ export class MusicBusiness {
           file
         )
       )
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "jwt expired" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getUserMusic(token: string, musicId?: string): Promise<Music | Music[]> {
+    try {
+      const userData: AuthenticationData = this.authenticator.getData(token);
+
+      if (!musicId) {
+        const music: Music[]
+          = await this.musicDatabase.getAllUserMusic(userData.id);
+
+        return music
+      }
+
+      const music: Music = await this.musicDatabase.getMusicById(musicId);
+
+      if(!music) {
+        throw new NotFoundError("Music not found");
+      }
+
+      return music
     } catch (error) {
       const { code, message } = error;
 
