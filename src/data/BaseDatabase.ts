@@ -7,8 +7,14 @@ export default abstract class BaseDatabase {
 
   private static connection: knex | null = null;
 
-  protected getConnection(): knex {
+  protected tableNames = {
+    users: "S21_USERS",
+    music: "S21_MUSIC",
+    genres: "S21_GENRES",
+    musicGenres: "S21_MUSIC_GENRES"
+  }
 
+  protected getConnection(): knex {
     if (!BaseDatabase.connection) {
       BaseDatabase.connection = knex({
         client: "mysql",
