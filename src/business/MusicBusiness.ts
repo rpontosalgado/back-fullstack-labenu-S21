@@ -1,5 +1,6 @@
 import musicDatabase, { MusicDatabase } from "../data/MusicDatabase";
 import BaseError from "../errors/BaseError";
+import ConflictError from "../errors/ConflictError";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
@@ -31,19 +32,19 @@ export class MusicBusiness {
         (genre:GenreDTO) => genre.name
       );
 
-      const newGenres: GenreDTO[] = [];
+      let newGenres: GenreDTO[] = [];
 
-      genres.forEach(async (genre: string) => {
+      for (const genre of genres) {
         if (!genreNames.includes(genre.toLowerCase())) {
           const genreId: string = this.idGenerator.generate();
           
           const newGenre: GenreDTO = { id: genreId, name: genre.toLowerCase() };
 
-          await musicDatabase.createGenre(newGenre);
-
           newGenres.push(newGenre);
+          
+          await musicDatabase.createGenre(newGenre);
         }
-      });
+      }
 
       const musicId: string = this.idGenerator.generate();
 
@@ -54,9 +55,7 @@ export class MusicBusiness {
         musicId,
         genreId: item.id
       }));
-
-      await this.musicDatabase.addGenresToMusic(musicGenres);
-
+      
       await this.musicDatabase.createMusic(
         new Music(
           musicId,
@@ -66,6 +65,8 @@ export class MusicBusiness {
           file
         )
       )
+          
+      await this.musicDatabase.addGenresToMusic(musicGenres);
     } catch (error) {
       const { code, message } = error;
 
@@ -76,6 +77,12 @@ export class MusicBusiness {
         message === "invalid token"
       ) {
         throw new UnauthorizedError("Invalid credentials");
+      }
+
+      if (error.message.includes("Duplicate entry")) {
+        throw new ConflictError(
+          "This album already has a music with this title"
+        );
       }
       
       throw new BaseError(code || 400, message);
@@ -90,7 +97,14 @@ export class MusicBusiness {
         const music: Music[]
           = await this.musicDatabase.getAllUserMusic(userData.id);
 
-        return music
+        for (const item of music) {
+          const musicGenres: string[]
+            = await this.musicDatabase.getMusicGenresById(item.getId());
+
+          item.setGenres(musicGenres);
+        }
+
+        return music;
       }
 
       const music: Music = await this.musicDatabase.getMusicById(musicId);
@@ -99,7 +113,12 @@ export class MusicBusiness {
         throw new NotFoundError("Music not found");
       }
 
-      return music
+      const musicGenres: string[]
+        = await musicDatabase.getMusicGenresById(music.getId());
+
+      music.setGenres(musicGenres);
+
+      return music;
     } catch (error) {
       const { code, message } = error;
 

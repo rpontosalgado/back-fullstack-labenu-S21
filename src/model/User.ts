@@ -3,6 +3,7 @@ export class User {
   private id: string,
   private name: string,
   private email: string,
+  private nickname: string,
   private password: string
   // private role: UserRole
   ) {}
@@ -17,6 +18,10 @@ export class User {
 
   getEmail(){
       return this.email;
+  }
+
+  getNickname(){
+      return this.nickname;
   }
 
   getPassword(){
@@ -37,6 +42,10 @@ export class User {
 
   setEmail(email: string){
       this.email = email;
+  }
+
+  setNickname(nickname: string){
+      this.nickname = nickname;
   }
 
   setPassword(password: string){
@@ -63,6 +72,7 @@ export class User {
           user.id,
           user.name,
           user.email,
+          user.nickname,
           user.password
           // User.stringToUserRole(user.role)
       );
@@ -72,6 +82,7 @@ export class User {
 export interface UserInputDTO {
   name: string;
   email: string;
+  nickname: string;
   password: string;
   // role: string;
 }

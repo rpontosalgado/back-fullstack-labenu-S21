@@ -18,9 +18,9 @@ export class UserBusiness {
 
   async createUser(user: UserInputDTO): Promise<string> {
     try {
-      const { name, email, password } = user;
+      const { name, email, nickname, password } = user;
 
-      if (!name || !email || !password) {
+      if (!name || !email || !nickname || !password) {
           throw new UnprocessableEntityError("Missing inputs");
       }
 
@@ -41,6 +41,7 @@ export class UserBusiness {
           id,
           name,
           email,
+          nickname,
           hashPassword
           // User.stringToUserRole(role)
         )
@@ -71,7 +72,7 @@ export class UserBusiness {
       const { input, password } = user;
 
       if (!input || !password) {
-        throw new UnprocessableEntityError("Missing unputs");
+        throw new UnprocessableEntityError("Missing inputs");
       }
 
       const userFromDB: User = await this.userDatabase.getUserByEmailOrNickname(input);
