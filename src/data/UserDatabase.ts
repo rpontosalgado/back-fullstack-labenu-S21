@@ -10,6 +10,7 @@ export class UserDatabase extends BaseDatabase {
           id: user.getId(),
           email: user.getEmail(),
           name: user.getName(),
+          nickname: user.getNickname(),
           password: user.getPassword()
           // role: user.getRole()
         })

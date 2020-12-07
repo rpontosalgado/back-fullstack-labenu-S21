@@ -6,7 +6,8 @@ export class Music {
     private album: string,
     private file: string,
     private date?: Date,
-    private authorName?: string
+    private authorName?: string,
+    private genres: string[] = []
   ){}
 
   getId(){
@@ -35,6 +36,10 @@ export class Music {
   
   getAuthorName(){
       return this.authorName;
+  }
+  
+  getGenres(){
+      return this.genres;
   }
 
   setId(id: string){
@@ -65,15 +70,19 @@ export class Music {
     this.authorName = authorName;
   }
 
+  setGenres(genres: string[]){
+    this.genres = genres;
+  }
+
   static toMusicModel(music: any): Music {
     return new Music(
       music.id,
       music.title,
-      music.authorId,
+      music.author_id,
       music.album,
       music.file,
       music.date,
-      music.authorName
+      music.name
     )
   }
 }
