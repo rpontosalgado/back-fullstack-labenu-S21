@@ -1,3 +1,5 @@
+import UnauthorizedError from "../errors/UnauthorizedError";
+
 export class User {
   constructor(
   private id: string,
@@ -9,51 +11,51 @@ export class User {
   ) {}
 
   getId(){
-      return this.id;
+    return this.id;
   }
 
   getName(){
-      return this.name;
+    return this.name;
   }
 
   getEmail(){
-      return this.email;
+    return this.email;
   }
 
   getNickname(){
-      return this.nickname;
+    return this.nickname;
   }
 
   getPassword(){
-      return this.password;
+    return this.password;
   }
 
   // getRole(){
-  //     return this.role;
+  //   return this.role;
   // }
 
   setId(id: string){
-      this.id = id;
+    this.id = id;
   }
 
   setName(name: string){
-      this.name = name;
+    this.name = name;
   }
 
   setEmail(email: string){
-      this.email = email;
+    this.email = email;
   }
 
   setNickname(nickname: string){
-      this.nickname = nickname;
+    this.nickname = nickname;
   }
 
   setPassword(password: string){
-      this.password = password;
+    this.password = password;
   }
 
   // setRole(role: UserRole){
-  //     this.role = role;
+  //   this.role = role;
   // }
 
   // static stringToUserRole(input: string): UserRole{
@@ -68,14 +70,18 @@ export class User {
   // }
 
   static toUserModel(user: any): User {
-      return new User(
-          user.id,
-          user.name,
-          user.email,
-          user.nickname,
-          user.password
-          // User.stringToUserRole(user.role)
-      );
+    if (!user) {
+      throw new UnauthorizedError("Invalid Credentials")
+    }
+
+    return new User(
+      user.id,
+      user.name,
+      user.email,
+      user.nickname,
+      user.password
+      // User.stringToUserRole(user.role)
+    );
   }
 }
 

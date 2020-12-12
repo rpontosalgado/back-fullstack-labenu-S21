@@ -1,3 +1,4 @@
+import BaseError from "../errors/BaseError";
 import { User } from "../model/User";
 import BaseDatabase from "./BaseDatabase";
 
@@ -30,7 +31,9 @@ export class UserDatabase extends BaseDatabase {
 
       return User.toUserModel(result[0]);
     } catch (error) {
-      throw new Error(error.sqlMessage || error.message);
+      const { code, message, sqlMessage } = error;
+
+      throw new BaseError(code || 400, sqlMessage || message);
     }
   }
 }
