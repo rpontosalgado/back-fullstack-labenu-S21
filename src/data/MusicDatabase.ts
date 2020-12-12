@@ -1,3 +1,4 @@
+import BaseError from "../errors/BaseError";
 import { GenreDTO, Music, MusicGenreDTO } from "../model/Music";
 import BaseDatabase from "./BaseDatabase";
 
@@ -88,7 +89,9 @@ export class MusicDatabase extends BaseDatabase {
 
       return Music.toMusicModel(result[0]);
     } catch (error) {
-      throw new Error(error.sqlMessage || error.message);
+      const { code, message, sqlMessage } = error;
+
+      throw new BaseError(code || 400, sqlMessage || message);
     }
   }
 
