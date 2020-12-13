@@ -73,7 +73,6 @@ export class MusicBusiness {
       if (
         message === "jwt must be provided" ||
         message === "jwt malformed" ||
-        message === "jwt expired" ||
         message === "invalid token"
       ) {
         throw new UnauthorizedError("Invalid credentials");
@@ -125,7 +124,6 @@ export class MusicBusiness {
       if (
         message === "jwt must be provided" ||
         message === "jwt malformed" ||
-        message === "jwt expired" ||
         message === "invalid token"
       ) {
         throw new UnauthorizedError("Invalid credentials");
