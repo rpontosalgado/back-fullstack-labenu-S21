@@ -78,6 +78,12 @@ export class MusicBusiness {
         throw new UnauthorizedError("Invalid credentials");
       }
 
+      if (error.message.includes("for key 'file'")) {
+        throw new ConflictError(
+          "This file has already been uploaded"
+        );
+      }
+
       if (error.message.includes("Duplicate entry")) {
         throw new ConflictError(
           "This album already has a music with this title"
