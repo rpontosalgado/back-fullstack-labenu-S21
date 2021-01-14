@@ -1,3 +1,4 @@
+import BaseError from "../errors/BaseError";
 import { GenreDTO, Music, MusicGenreDTO } from "../model/Music";
 import BaseDatabase from "./BaseDatabase";
 
@@ -74,17 +75,41 @@ export class MusicDatabase extends BaseDatabase {
   }
 
   async getMusicById(musicId: string): Promise<Music> {
-    const result = await this.getConnection()
-      .select('m.*', 'u.name')
-      .from(`${this.tableNames.music} as m`)
-      .join(
-        `${this.tableNames.users} as u`,
-        'm.author_id',
-        'u.id'
-      )
-      .where("m.id", musicId);
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(
+          `${this.tableNames.users} as u`,
+          'm.author_id',
+          'u.id'
+        )
+        .where("m.id", musicId);
 
-    return Music.toMusicModel(result[0]);
+      return Music.toMusicModel(result[0]);
+    } catch (error) {
+      const { code, message, sqlMessage } = error;
+
+      throw new BaseError(code || 400, sqlMessage || message);
+    }
+  }
+
+  async getMusicGenresById(musicId: string): Promise<string[]> {
+    try {
+      const result = await this.getConnection()
+        .select('g.name')
+        .from(`${this.tableNames.musicGenres} as mg`)
+        .join(
+          `${this.tableNames.genres} as g`,
+          'mg.genre_id',
+          'g.id'
+        )
+        .where("mg.music_id", musicId);
+      
+      return result.map(genre => genre.name);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
   }
 }
 

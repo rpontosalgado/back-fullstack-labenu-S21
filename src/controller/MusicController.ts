@@ -29,7 +29,7 @@ export class MusicController {
       const music: Music | Music[] = await MusicBusiness.getMusic(
         req.headers.authorization as string,
         req.params.id
-      )
+      );
 
       res.status(200).send({ music });
     } catch (error) {
