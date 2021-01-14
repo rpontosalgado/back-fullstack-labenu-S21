@@ -55,7 +55,7 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 
-  async getAllUserMusic(authorId: string): Promise<Music[]> {
+  async getAllMusic(authorId: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
@@ -65,7 +65,6 @@ export class MusicDatabase extends BaseDatabase {
           'm.author_id',
           'u.id'
         )
-        .where("m.author_id", authorId)
         .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
