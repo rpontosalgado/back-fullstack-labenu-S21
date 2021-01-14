@@ -88,13 +88,13 @@ export class MusicBusiness {
     }
   }
 
-  async getUserMusic(token: string, musicId?: string): Promise<Music | Music[]> {
+  async getMusic(token: string, musicId?: string): Promise<Music | Music[]> {
     try {
       const userData: AuthenticationData = this.authenticator.getData(token);
 
       if (!musicId) {
         const music: Music[]
-          = await this.musicDatabase.getAllUserMusic(userData.id);
+          = await this.musicDatabase.getAllMusic(userData.id);
 
         for (const item of music) {
           const musicGenres: string[]
