@@ -9,7 +9,7 @@ export class MusicDatabase extends BaseDatabase {
       const result: GenreDTO[] = await this.getConnection()
         .select()
         .from(this.tableNames.genres)
-        .whereIn('name', genres)
+        .whereIn('name', genres);
 
       return result;
     } catch (error) {
@@ -21,7 +21,7 @@ export class MusicDatabase extends BaseDatabase {
     try {
       await this.getConnection()
         .insert(genre)
-        .into(this.tableNames.genres)
+        .into(this.tableNames.genres);
     } catch (error) {
        throw new Error(error.sqlMessage || error.message);
     }
@@ -34,7 +34,7 @@ export class MusicDatabase extends BaseDatabase {
           music_id: item.musicId,
           genre_id: item.genreId
         })))
-        .into(this.tableNames.musicGenres)
+        .into(this.tableNames.musicGenres);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -56,7 +56,7 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 
-  async getAllMusic(authorId: string): Promise<Music[]> {
+  async getAllMusic(): Promise<Music[]> {
     try {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
@@ -111,6 +111,7 @@ export class MusicDatabase extends BaseDatabase {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+  
 }
 
 export default new MusicDatabase();
