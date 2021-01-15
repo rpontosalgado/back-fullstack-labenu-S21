@@ -3,7 +3,7 @@ import BaseError from "../errors/BaseError";
 import ConflictError from "../errors/ConflictError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
-import { Playlist, PlaylistInputDTO } from "../model/Playlist";
+import { Playlist, PlaylistInputDTO, PlaylistMusicDTO } from "../model/Playlist";
 import authenticator, { AuthenticationData, Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
 
@@ -55,10 +55,43 @@ export class PlaylistBusiness {
       throw new BaseError(code || 400, message);
     }
   }
+
+  async addMusicToPlaylist(
+    playlistMusic: PlaylistMusicDTO,
+    token: string
+  ): Promise<void> {
+    try {
+      this.authenticator.getData(token);
+
+      if (!playlistMusic.playlistId || !playlistMusic.musicId) {
+        throw new UnprocessableEntityError("Missing inputs");
+      }
+
+      await playlistDatabase.addMusicToPlaylist(playlistMusic);
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+
+      if (error.message.includes("Duplicate entry")) {
+        throw new ConflictError(
+          "Song already added to playlist"
+        );
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
 }
 
 export default new PlaylistBusiness(
   authenticator,
   playlistDatabase,
   idGenerator
-)
+);

@@ -74,3 +74,8 @@ export interface PlaylistInputDTO {
   subtitle: string;
   image: string;
 }
+
+export interface PlaylistMusicDTO {
+  playlistId: string;
+  musicId: string;
+}

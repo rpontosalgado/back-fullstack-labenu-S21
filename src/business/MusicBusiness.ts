@@ -138,4 +138,4 @@ export default new MusicBusiness(
   authenticator,
   musicDatabase,
   idGenerator
-)
+);
