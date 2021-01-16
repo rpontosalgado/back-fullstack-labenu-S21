@@ -13,7 +13,6 @@ export class UserDatabase extends BaseDatabase {
           name: user.getName(),
           nickname: user.getNickname(),
           password: user.getPassword()
-          // role: user.getRole()
         })
         .into(this.tableNames.users);
     } catch (error) {

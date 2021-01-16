@@ -7,6 +7,7 @@ export class Playlist {
     private title: string,
     private subtitle?: string,
     private image?: string,
+    private creatorName?: string,
     private music: Music[] = []
   ){}
 
@@ -61,7 +62,7 @@ export class Playlist {
   static toPlaylistModel(playlist: any): Playlist {
     return new Playlist(
       playlist.id,
-      playlist.creatorId,
+      playlist.creator_id,
       playlist.title,
       playlist.subtitle,
       playlist.image

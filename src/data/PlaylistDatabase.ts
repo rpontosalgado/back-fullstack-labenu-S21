@@ -1,3 +1,4 @@
+import BaseError from "../errors/BaseError";
 import { Playlist, PlaylistMusicDTO } from "../model/Playlist";
 import BaseDatabase from "./BaseDatabase";
 
@@ -29,6 +30,39 @@ export class PlaylistDatabase extends BaseDatabase {
         .into(this.tableNames.playlistMusic);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getUserPlaylists(userId: string): Promise<Playlist[]> {
+    try {
+      const result = await this.getConnection()
+        .select('*')
+        .from(this.tableNames.playlist)
+        .where('creator_id', userId);
+      
+      return result.map((playlist: any) => Playlist.toPlaylistModel(playlist));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getPlaylistById(playlistId: string): Promise<Playlist> {
+    try {
+      const result = await this.getConnection()
+        .select('p.*', 'u.name')
+        .from(`${this.tableNames.playlist} as p`)
+        .join(
+          `${this.tableNames.users} as u`,
+          'p.creator_id',
+          'u.id'
+        )
+        .where("p.id", playlistId);
+
+      return Playlist.toPlaylistModel(result[0]);
+    } catch (error) {
+      const { code, message, sqlMessage } = error;
+
+      throw new BaseError(code || 400, sqlMessage || message);
     }
   }
 
