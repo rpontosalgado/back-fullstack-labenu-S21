@@ -4,8 +4,12 @@ import ConflictError from "../errors/ConflictError";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
-import { GenreDTO, Music, MusicFilterDTO, MusicGenreDTO, MusicInputDTO } from "../model/Music";
-import authenticator, { AuthenticationData, Authenticator } from "../services/Authenticator";
+import {
+  GenreDTO, Music, MusicFilterDTO, MusicGenreDTO, MusicInputDTO
+} from "../model/Music";
+import authenticator, {
+  AuthenticationData, Authenticator
+} from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
 
 export class MusicBusiness {
@@ -38,7 +42,10 @@ export class MusicBusiness {
         if (!genreNames.includes(genre.toLowerCase())) {
           const genreId: string = this.idGenerator.generate();
           
-          const newGenre: GenreDTO = { id: genreId, name: genre.toLowerCase() };
+          const newGenre: GenreDTO = {
+            id: genreId,
+            name: genre.toLowerCase()
+          };
 
           newGenres.push(newGenre);
           

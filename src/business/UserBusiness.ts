@@ -43,14 +43,10 @@ export class UserBusiness {
           email,
           nickname,
           hashPassword
-          // User.stringToUserRole(role)
         )
       );
 
-      const accessToken: string = this.authenticator.generateToken({
-        id
-        // role
-      });
+      const accessToken: string = this.authenticator.generateToken({ id });
 
       return accessToken;
     } catch (error) {
@@ -75,7 +71,8 @@ export class UserBusiness {
         throw new UnprocessableEntityError("Missing inputs");
       }
 
-      const userFromDB: User = await this.userDatabase.getUserByEmailOrNickname(input);
+      const userFromDB: User
+        = await this.userDatabase.getUserByEmailOrNickname(input);
 
       if (!userFromDB) {
         throw new UnauthorizedError("Invalid credentials");
