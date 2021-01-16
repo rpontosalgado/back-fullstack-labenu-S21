@@ -1,4 +1,5 @@
 import BaseError from "../errors/BaseError";
+import { Music } from "../model/Music";
 import { Playlist, PlaylistMusicDTO } from "../model/Playlist";
 import BaseDatabase from "./BaseDatabase";
 
@@ -63,6 +64,29 @@ export class PlaylistDatabase extends BaseDatabase {
       const { code, message, sqlMessage } = error;
 
       throw new BaseError(code || 400, sqlMessage || message);
+    }
+  }
+
+  async getPlaylistMusic(playlistId: string) {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.playlistMusic} as pm`)
+        .join(
+          `${this.tableNames.music} as m`,
+          'pm.music_id',
+          'm.id'
+        )
+        .join(
+          `${this.tableNames.users} as u`,
+          'm.author_id',
+          'u.id'
+        )
+        .where("pm.playlist_id", playlistId);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
     }
   }
 
