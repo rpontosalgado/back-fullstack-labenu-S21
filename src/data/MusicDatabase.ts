@@ -61,11 +61,7 @@ export class MusicDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
         .from(`${this.tableNames.music} as m`)
-        .join(
-          `${this.tableNames.users} as u`,
-          'm.author_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
         .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
@@ -79,11 +75,7 @@ export class MusicDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
         .from(`${this.tableNames.music} as m`)
-        .join(
-          `${this.tableNames.users} as u`,
-          'm.author_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
         .where("m.id", musicId);
 
       return Music.toMusicModel(result[0]);
@@ -99,14 +91,55 @@ export class MusicDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('g.name')
         .from(`${this.tableNames.musicGenres} as mg`)
-        .join(
-          `${this.tableNames.genres} as g`,
-          'mg.genre_id',
-          'g.id'
-        )
+        .join(`${this.tableNames.genres} as g`,'mg.genre_id','g.id')
         .where("mg.music_id", musicId);
       
       return result.map(genre => genre.name);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getMusicByGenreName(genre: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.musicGenres} as mg`)
+        .join(`${this.tableNames.genres} as g`,'mg.genre_id','g.id')
+        .join(`${this.tableNames.music} as m`,'mg.music_id','m.id')
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('g.name', genre);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getMusicByAlbumName(album: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('m.album', album);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+
+  async getMusicByArtistName(artist: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('u.name', artist);
+
+      return result.map((music: any) => Music.toMusicModel(music));
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }

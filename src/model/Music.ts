@@ -103,3 +103,9 @@ export interface MusicGenreDTO {
   musicId: string;
   genreId: string;
 }
+
+export interface MusicFilterDTO {
+  artist: string;
+  album: string;
+  genre: string;
+}
