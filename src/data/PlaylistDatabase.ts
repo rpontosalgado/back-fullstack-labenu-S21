@@ -41,7 +41,9 @@ export class PlaylistDatabase extends BaseDatabase {
         .from(this.tableNames.playlist)
         .where('creator_id', userId);
       
-      return result.map((playlist: any) => Playlist.toPlaylistModel(playlist));
+      return result.map(
+        (playlist: any) => Playlist.toPlaylistModel(playlist)
+      );
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -52,11 +54,7 @@ export class PlaylistDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('p.*', 'u.name')
         .from(`${this.tableNames.playlist} as p`)
-        .join(
-          `${this.tableNames.users} as u`,
-          'p.creator_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.users} as u`, 'p.creator_id', 'u.id')
         .where("p.id", playlistId);
 
       return Playlist.toPlaylistModel(result[0]);
@@ -72,19 +70,27 @@ export class PlaylistDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
         .from(`${this.tableNames.playlistMusic} as pm`)
-        .join(
-          `${this.tableNames.music} as m`,
-          'pm.music_id',
-          'm.id'
-        )
-        .join(
-          `${this.tableNames.users} as u`,
-          'm.author_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.music} as m`, 'pm.music_id', 'm.id')
+        .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
         .where("pm.playlist_id", playlistId);
 
       return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async deleteMusicFromPlaylist(
+    playlistMusic: PlaylistMusicDTO
+  ): Promise<void> {
+    try {
+      await this.getConnection()
+        .from(this.tableNames.playlistMusic)
+        .where({
+          playlist_id: playlistMusic.playlistId,
+          music_id: playlistMusic.musicId
+        })
+        .del();
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
