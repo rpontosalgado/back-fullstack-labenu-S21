@@ -67,7 +67,7 @@ export class PlaylistDatabase extends BaseDatabase {
     }
   }
 
-  async getPlaylistMusic(playlistId: string) {
+  async getPlaylistMusic(playlistId: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
         .select('m.*', 'u.name')

@@ -1,8 +1,10 @@
 import playlistDatabase, { PlaylistDatabase } from "../data/PlaylistDatabase";
 import BaseError from "../errors/BaseError";
 import ConflictError from "../errors/ConflictError";
+import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
+import { Music } from "../model/Music";
 import { Playlist, PlaylistInputDTO, PlaylistMusicDTO } from "../model/Playlist";
 import authenticator, { AuthenticationData, Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
@@ -83,6 +85,48 @@ export class PlaylistBusiness {
         throw new ConflictError(
           "Song already added to playlist"
         );
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getPlaylist(
+    token: string,
+    playlistId?: string
+  ): Promise<Playlist | Playlist[]> {
+    try {
+      const userData: AuthenticationData = this.authenticator.getData(token);
+
+      if (!playlistId) {
+        const playlists: Playlist[] 
+          = await this.playlistDatabase.getUserPlaylists(userData.id);
+
+        return playlists
+      }
+
+      const playlist: Playlist
+        = await this.playlistDatabase.getPlaylistById(playlistId);
+
+      if (!playlist) {
+        throw new NotFoundError("Playlist not found");
+      }
+
+      const playlistMusic: Music[]
+        = await this.playlistDatabase.getPlaylistMusic(playlistId);
+      
+      playlist.setMusic(playlistMusic);
+
+      return playlist;
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
       }
       
       throw new BaseError(code || 400, message);

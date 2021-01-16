@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import PlaylistBusiness from "../business/PlaylistBusiness";
-import { PlaylistInputDTO, PlaylistMusicDTO } from "../model/Playlist";
+import { Playlist, PlaylistInputDTO, PlaylistMusicDTO } from "../model/Playlist";
 
 export class PlaylistController {
   async createPlaylist(req: Request, res: Response):Promise<void> {
@@ -36,6 +36,21 @@ export class PlaylistController {
       );
 
       res.status(201).end();
+    } catch (error) {
+      const { code, message } = error;
+      res.status(code || 400).send({ message });
+    }
+  }
+
+  async getPlaylist(req: Request, res: Response):Promise<void> {
+    try {
+      const playlist: Playlist | Playlist []
+        = await PlaylistBusiness.getPlaylist(
+          req.headers.authorization as string,
+          req.params.id
+        );
+
+        res.status(200).send({playlist});
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
