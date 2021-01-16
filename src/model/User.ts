@@ -7,7 +7,6 @@ export class User {
   private email: string,
   private nickname: string,
   private password: string
-  // private role: UserRole
   ) {}
 
   getId(){
@@ -30,9 +29,6 @@ export class User {
     return this.password;
   }
 
-  // getRole(){
-  //   return this.role;
-  // }
 
   setId(id: string){
     this.id = id;
@@ -54,21 +50,6 @@ export class User {
     this.password = password;
   }
 
-  // setRole(role: UserRole){
-  //   this.role = role;
-  // }
-
-  // static stringToUserRole(input: string): UserRole{
-  //     switch (input) {
-  //         case "NORMAL":
-  //             return UserRole.NORMAL;
-  //         case "ADMIN":
-  //             return UserRole.ADMIN;
-  //         default:
-  //             throw new UnprocessableEntityError("Invalid user role");
-  //     }
-  // }
-
   static toUserModel(user: any): User {
     if (!user) {
       throw new UnauthorizedError("Invalid Credentials")
@@ -80,7 +61,6 @@ export class User {
       user.email,
       user.nickname,
       user.password
-      // User.stringToUserRole(user.role)
     );
   }
 }
@@ -90,7 +70,6 @@ export interface UserInputDTO {
   email: string;
   nickname: string;
   password: string;
-  // role: string;
 }
 
 export interface LoginInputDTO {

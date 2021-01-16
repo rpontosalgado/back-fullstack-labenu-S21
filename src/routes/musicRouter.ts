@@ -5,3 +5,4 @@ export const musicRouter: Router = express.Router();
 
 musicRouter.post("/", MusicController.createMusic);
 musicRouter.get("/:id", MusicController.getMusic);
+musicRouter.get("/filter", MusicController.getMusicByFilter);

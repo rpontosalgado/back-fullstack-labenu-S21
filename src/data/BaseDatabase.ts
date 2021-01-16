@@ -11,7 +11,9 @@ export default abstract class BaseDatabase {
     users: "S21_USERS",
     music: "S21_MUSIC",
     genres: "S21_GENRES",
-    musicGenres: "S21_MUSIC_GENRES"
+    musicGenres: "S21_MUSIC_GENRES",
+    playlist: "S21_PLAYLIST",
+    playlistMusic: "S21_PLAYLIST_MUSIC"
   }
 
   protected getConnection(): knex {

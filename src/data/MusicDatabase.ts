@@ -9,7 +9,7 @@ export class MusicDatabase extends BaseDatabase {
       const result: GenreDTO[] = await this.getConnection()
         .select()
         .from(this.tableNames.genres)
-        .whereIn('name', genres)
+        .whereIn('name', genres);
 
       return result;
     } catch (error) {
@@ -21,7 +21,7 @@ export class MusicDatabase extends BaseDatabase {
     try {
       await this.getConnection()
         .insert(genre)
-        .into(this.tableNames.genres)
+        .into(this.tableNames.genres);
     } catch (error) {
        throw new Error(error.sqlMessage || error.message);
     }
@@ -34,7 +34,7 @@ export class MusicDatabase extends BaseDatabase {
           music_id: item.musicId,
           genre_id: item.genreId
         })))
-        .into(this.tableNames.musicGenres)
+        .into(this.tableNames.musicGenres);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
@@ -56,16 +56,12 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 
-  async getAllMusic(authorId: string): Promise<Music[]> {
+  async getAllMusic(): Promise<Music[]> {
     try {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
         .from(`${this.tableNames.music} as m`)
-        .join(
-          `${this.tableNames.users} as u`,
-          'm.author_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
         .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
@@ -79,11 +75,7 @@ export class MusicDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('m.*', 'u.name')
         .from(`${this.tableNames.music} as m`)
-        .join(
-          `${this.tableNames.users} as u`,
-          'm.author_id',
-          'u.id'
-        )
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
         .where("m.id", musicId);
 
       return Music.toMusicModel(result[0]);
@@ -99,11 +91,7 @@ export class MusicDatabase extends BaseDatabase {
       const result = await this.getConnection()
         .select('g.name')
         .from(`${this.tableNames.musicGenres} as mg`)
-        .join(
-          `${this.tableNames.genres} as g`,
-          'mg.genre_id',
-          'g.id'
-        )
+        .join(`${this.tableNames.genres} as g`,'mg.genre_id','g.id')
         .where("mg.music_id", musicId);
       
       return result.map(genre => genre.name);
@@ -111,6 +99,52 @@ export class MusicDatabase extends BaseDatabase {
       throw new Error(error.sqlMessage || error.message);
     }
   }
+
+  async getMusicByGenreName(genre: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.musicGenres} as mg`)
+        .join(`${this.tableNames.genres} as g`,'mg.genre_id','g.id')
+        .join(`${this.tableNames.music} as m`,'mg.music_id','m.id')
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('g.name', genre);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getMusicByAlbumName(album: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('m.album', album);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+
+  async getMusicByArtistName(artist: string): Promise<Music[]> {
+    try {
+      const result = await this.getConnection()
+        .select('m.*', 'u.name')
+        .from(`${this.tableNames.music} as m`)
+        .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
+        .where('u.name', artist);
+
+      return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+  
 }
 
 export default new MusicDatabase();

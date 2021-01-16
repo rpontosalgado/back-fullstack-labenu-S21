@@ -4,7 +4,7 @@ import ConflictError from "../errors/ConflictError";
 import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
-import { GenreDTO, Music, MusicGenreDTO, MusicInputDTO } from "../model/Music";
+import { GenreDTO, Music, MusicFilterDTO, MusicGenreDTO, MusicInputDTO } from "../model/Music";
 import authenticator, { AuthenticationData, Authenticator } from "../services/Authenticator";
 import idGenerator, { IdGenerator } from "../services/IdGenerator";
 
@@ -90,11 +90,11 @@ export class MusicBusiness {
 
   async getMusic(token: string, musicId?: string): Promise<Music | Music[]> {
     try {
-      const userData: AuthenticationData = this.authenticator.getData(token);
+      this.authenticator.getData(token);
 
       if (!musicId) {
         const music: Music[]
-          = await this.musicDatabase.getAllMusic(userData.id);
+          = await this.musicDatabase.getAllMusic();
 
         for (const item of music) {
           const musicGenres: string[]
@@ -132,10 +132,79 @@ export class MusicBusiness {
       throw new BaseError(code || 400, message);
     }
   }
+
+  async getMusicByFilter(
+    token: string,
+    filter: MusicFilterDTO
+  ): Promise<Music[]> {
+    try {
+      this.authenticator.getData(token);
+
+      const { artist, album, genre } = filter;
+
+      if (!artist || !album || !genre) {
+        throw new UnprocessableEntityError("Missing inputs");
+      }
+
+      if (artist) {
+        const music: Music[]
+          = await this.musicDatabase.getMusicByArtistName(artist);
+
+        for (const item of music) {
+          const musicGenres: string[]
+            = await this.musicDatabase.getMusicGenresById(item.getId());
+
+          item.setGenres(musicGenres);
+        }
+
+        return music;
+      }
+
+      if (album) {
+        const music: Music[]
+          = await this.musicDatabase.getMusicByAlbumName(album);
+
+        for (const item of music) {
+          const musicGenres: string[]
+            = await this.musicDatabase.getMusicGenresById(item.getId());
+
+          item.setGenres(musicGenres);
+        }
+
+        return music;
+      }
+
+      if (genre) {
+        const music: Music[]
+          = await this.musicDatabase.getMusicByGenreName(genre);
+
+        for (const item of music) {
+          const musicGenres: string[]
+            = await this.musicDatabase.getMusicGenresById(item.getId());
+
+          item.setGenres(musicGenres);
+        }
+
+        return music;
+      }
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
 }
 
 export default new MusicBusiness(
   authenticator,
   musicDatabase,
   idGenerator
-)
+);
