@@ -26,29 +26,16 @@ export class MusicController {
 
   async getMusic(req: Request, res: Response):Promise<void> {
     try {
-      const music: Music | Music[] = await MusicBusiness.getMusic(
-        req.headers.authorization as string,
-        req.params.id
-      );
-
-      res.status(200).send({ music });
-    } catch (error) {
-      const { code, message } = error;
-      res.status(code || 400).send({ message });
-    }
-  }
-
-  async getMusicByFilter(req: Request, res: Response):Promise<void> {
-    try {
       const filter: MusicFilterDTO = {
         artist: req.query.artist as string,
         album: req.query.album as string,
         genre: req.query.genre as string
       }
 
-      const music: Music | Music[] = await MusicBusiness.getMusicByFilter(
+      const music: Music | Music[] = await MusicBusiness.getMusic(
         req.headers.authorization as string,
-        filter
+        filter,
+        req.params.id
       );
 
       res.status(200).send({ music });
