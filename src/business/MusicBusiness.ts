@@ -96,30 +96,16 @@ export class MusicBusiness {
   }
 
   async getMusic(token: string,
-    filter?: MusicFilterDTO,
+    filter: MusicFilterDTO,
     musicId?: string
   ): Promise<Music | Music[]> {
     try {
       this.authenticator.getData(token);
 
+      const { artist, album, genre } = filter;
+
       if (!musicId) {
-        const music: Music[]
-          = await this.musicDatabase.getAllMusic();
-
-        for (const item of music) {
-          const musicGenres: string[]
-            = await this.musicDatabase.getMusicGenresById(item.getId());
-
-          item.setGenres(musicGenres);
-        }
-
-        return music;
-      }
-
-      if (filter) {
-        const { artist, album, genre } = filter
-
-        if (artist) {
+        if (artist && !album && !genre) {
           const music: Music[]
             = await this.musicDatabase.getMusicByArtistName(artist);
 
@@ -132,8 +118,8 @@ export class MusicBusiness {
 
           return music;
         }
-        
-        if (album) {
+
+        if (!artist && album && !genre) {
           const music: Music[]
             = await this.musicDatabase.getMusicByAlbumName(album);
   
@@ -146,8 +132,8 @@ export class MusicBusiness {
   
           return music;
         }
-        
-        if (genre) {
+
+        if (!artist && !album && genre) {
           const music: Music[]
             = await this.musicDatabase.getMusicByGenreName(genre);
   
@@ -160,6 +146,18 @@ export class MusicBusiness {
   
           return music;
         }
+
+        const music: Music[]
+          = await this.musicDatabase.getAllMusic();
+
+        for (const item of music) {
+          const musicGenres: string[]
+            = await this.musicDatabase.getMusicGenresById(item.getId());
+
+          item.setGenres(musicGenres);
+        }
+
+        return music;
       }
 
       const music: Music = await this.musicDatabase.getMusicById(musicId);
