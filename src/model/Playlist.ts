@@ -31,6 +31,10 @@ export class Playlist {
     return this.image;
   }
 
+  getCreatorName(){
+    return this.creatorName;
+  }
+
   getMusic(){
     return this.music;
   }
@@ -55,6 +59,10 @@ export class Playlist {
     this.image = image;
   }
 
+  setCreatorName(creatorName: string){
+    this.creatorName = creatorName;
+  }
+
   setMusic(music: Music[]){
     this.music = music;
   }
@@ -65,7 +73,8 @@ export class Playlist {
       playlist.creator_id,
       playlist.title,
       playlist.subtitle,
-      playlist.image
+      playlist.image,
+      playlist.name
     )
   }
 }

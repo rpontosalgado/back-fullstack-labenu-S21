@@ -34,12 +34,12 @@ export class PlaylistDatabase extends BaseDatabase {
     }
   }
 
-  async getUserPlaylists(userId: string): Promise<Playlist[]> {
+  async getPlaylists(): Promise<Playlist[]> {
     try {
       const result = await this.getConnection()
-        .select('*')
-        .from(this.tableNames.playlist)
-        .where('creator_id', userId);
+        .select('p.*', 'u.name')
+        .from(`${this.tableNames.playlist} as p`)
+        .join(`${this.tableNames.users} as u`, 'p.creator_id', 'u.id');
       
       return result.map(
         (playlist: any) => Playlist.toPlaylistModel(playlist)
