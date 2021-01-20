@@ -59,7 +59,7 @@ export class MusicDatabase extends BaseDatabase {
   async getAllMusic(): Promise<Music[]> {
     try {
       const result = await this.getConnection()
-        .select('m.*', 'u.name')
+        .select('m.*','u.name')
         .from(`${this.tableNames.music} as m`)
         .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
         .orderBy("m.date", "desc");
@@ -73,7 +73,7 @@ export class MusicDatabase extends BaseDatabase {
   async getMusicById(musicId: string): Promise<Music> {
     try {
       const result = await this.getConnection()
-        .select('m.*', 'u.name')
+        .select('m.*','u.name')
         .from(`${this.tableNames.music} as m`)
         .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
         .where("m.id", musicId);
@@ -103,12 +103,13 @@ export class MusicDatabase extends BaseDatabase {
   async getMusicByGenreName(genre: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
-        .select('m.*', 'u.name')
+        .select('m.*','u.name')
         .from(`${this.tableNames.musicGenres} as mg`)
         .join(`${this.tableNames.genres} as g`, 'mg.genre_id', 'g.id')
         .join(`${this.tableNames.music} as m`, 'mg.music_id', 'm.id')
         .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
-        .where('g.name', genre);
+        .where('g.name', genre)
+        .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
     } catch (error) {
@@ -119,10 +120,11 @@ export class MusicDatabase extends BaseDatabase {
   async getMusicByAlbumName(album: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
-        .select('m.*', 'u.name')
+        .select('m.*','u.name')
         .from(`${this.tableNames.music} as m`)
         .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
-        .where('m.album', album);
+        .where('m.album', album)
+        .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
     } catch (error) {
@@ -134,10 +136,11 @@ export class MusicDatabase extends BaseDatabase {
   async getMusicByArtistName(artist: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
-        .select('m.*', 'u.name')
+        .select('m.*','u.name')
         .from(`${this.tableNames.music} as m`)
         .join(`${this.tableNames.users} as u`,'m.author_id','u.id')
-        .where('u.name', artist);
+        .where('u.name', artist)
+        .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
     } catch (error) {
