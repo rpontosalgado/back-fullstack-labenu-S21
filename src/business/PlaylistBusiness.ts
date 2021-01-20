@@ -103,11 +103,11 @@ export class PlaylistBusiness {
     playlistId?: string
   ): Promise<Playlist | Playlist[]> {
     try {
-      const userData: AuthenticationData = this.authenticator.getData(token);
+      this.authenticator.getData(token);
 
       if (!playlistId) {
         const playlists: Playlist[] 
-          = await this.playlistDatabase.getUserPlaylists(userData.id);
+          = await this.playlistDatabase.getPlaylists();
 
         return playlists
       }
