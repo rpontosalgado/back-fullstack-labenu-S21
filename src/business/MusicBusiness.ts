@@ -95,7 +95,8 @@ export class MusicBusiness {
     }
   }
 
-  async getMusic(token: string,
+  async getMusic(
+    token: string,
     filter: MusicFilterDTO,
     musicId?: string
   ): Promise<Music | Music[]> {

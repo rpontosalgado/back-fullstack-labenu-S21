@@ -81,8 +81,8 @@ export class Playlist {
 
 export interface PlaylistInputDTO {
   title: string;
-  subtitle: string;
-  image: string;
+  subtitle: string | undefined;
+  image: string | undefined;
 }
 
 export interface PlaylistMusicDTO {
