@@ -29,7 +29,7 @@ export class PlaylistBusiness {
 
       const userData: AuthenticationData = this.authenticator.getData(token);
 
-      if (!title || !subtitle || !image) {
+      if (!title) {
         throw new UnprocessableEntityError("Missing inputs");
       }
 
