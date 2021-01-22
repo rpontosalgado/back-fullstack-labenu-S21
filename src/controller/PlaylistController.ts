@@ -62,8 +62,8 @@ export class PlaylistController {
   async deleteMusicFromPlaylist(req: Request, res: Response):Promise<void> {
     try {
       const input: PlaylistMusicDTO = {
-        playlistId: req.body.playlistId,
-        musicId: req.body.playlistId
+        playlistId: req.params.playlistId,
+        musicId: req.params.playlistId
       };
 
       await PlaylistBusiness.addMusicToPlaylist(
