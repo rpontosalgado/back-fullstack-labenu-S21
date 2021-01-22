@@ -63,7 +63,7 @@ export class PlaylistController {
     try {
       const input: PlaylistMusicDTO = {
         playlistId: req.params.playlistId,
-        musicId: req.params.playlistId
+        musicId: req.params.musicId
       };
 
       await PlaylistBusiness.addMusicToPlaylist(

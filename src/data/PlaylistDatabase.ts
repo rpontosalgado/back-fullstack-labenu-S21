@@ -85,11 +85,12 @@ export class PlaylistDatabase extends BaseDatabase {
   ): Promise<void> {
     try {
       await this.getConnection()
-        .raw(`
-          DELETE FROM ${this.tableNames.playlistMusic}
-            WHERE playlist_id = ${playlistMusic.playlistId}
-              AND music_id = ${playlistMusic.musicId};
-        `);
+        .from(this.tableNames.playlistMusic)
+        .where({
+          playlist_id: playlistMusic.playlistId,
+          music_id: playlistMusic.musicId
+        })
+        .del();
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
