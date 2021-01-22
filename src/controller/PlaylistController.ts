@@ -66,7 +66,7 @@ export class PlaylistController {
         musicId: req.params.musicId
       };
 
-      await PlaylistBusiness.addMusicToPlaylist(
+      await PlaylistBusiness.deleteMusicFromPlaylist(
         input,
         req.headers.authorization as string
       );
