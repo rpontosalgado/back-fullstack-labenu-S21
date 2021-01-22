@@ -19,9 +19,9 @@ export class UserController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
-
-    await BaseDatabase.destroyConnection();
   }
 
   async login(req: Request, res: Response): Promise<void> {
@@ -39,9 +39,9 @@ export class UserController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
-
-    await BaseDatabase.destroyConnection();
   }
 }
 

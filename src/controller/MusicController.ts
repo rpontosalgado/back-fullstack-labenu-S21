@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import MusicBusiness from "../business/MusicBusiness";
+import BaseDatabase from "../data/BaseDatabase";
 import { Music, MusicFilterDTO, MusicInputDTO } from "../model/Music";
 
 export class MusicController {
@@ -21,6 +22,8 @@ export class MusicController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 
@@ -42,6 +45,8 @@ export class MusicController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 }
