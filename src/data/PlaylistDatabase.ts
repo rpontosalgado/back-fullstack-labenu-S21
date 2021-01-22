@@ -85,12 +85,12 @@ export class PlaylistDatabase extends BaseDatabase {
   ): Promise<void> {
     try {
       await this.getConnection()
+        .del()
         .from(this.tableNames.playlistMusic)
         .where({
           playlist_id: playlistMusic.playlistId,
           music_id: playlistMusic.musicId
-        })
-        .del();
+        });
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }
