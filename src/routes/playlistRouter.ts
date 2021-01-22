@@ -10,5 +10,5 @@ playlistRouter.put("/music", PlaylistController.addMusicToPlaylist);
 playlistRouter.get("/:id?", PlaylistController.getPlaylist);
 
 playlistRouter.delete(
-  "/music/:id", PlaylistController.deleteMusicFromPlaylist
+  "/:playlistId/music/:musicId", PlaylistController.deleteMusicFromPlaylist
 );

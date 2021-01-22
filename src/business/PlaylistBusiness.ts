@@ -162,12 +162,6 @@ export class PlaylistBusiness {
       ) {
         throw new UnauthorizedError("Invalid credentials");
       }
-
-      if (error.message.includes("Duplicate entry")) {
-        throw new ConflictError(
-          "Song already added to playlist"
-        );
-      }
       
       throw new BaseError(code || 400, message);
     }

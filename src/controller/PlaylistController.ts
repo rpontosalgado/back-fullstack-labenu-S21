@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import PlaylistBusiness from "../business/PlaylistBusiness";
+import BaseDatabase from "../data/BaseDatabase";
 import {
   Playlist, PlaylistInputDTO, PlaylistMusicDTO
 } from "../model/Playlist";
@@ -56,17 +57,19 @@ export class PlaylistController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 
   async deleteMusicFromPlaylist(req: Request, res: Response):Promise<void> {
     try {
       const input: PlaylistMusicDTO = {
-        playlistId: req.body.playlistId,
-        musicId: req.body.playlistId
+        playlistId: req.params.playlistId,
+        musicId: req.params.musicId
       };
 
-      await PlaylistBusiness.addMusicToPlaylist(
+      await PlaylistBusiness.deleteMusicFromPlaylist(
         input,
         req.headers.authorization as string
       );
@@ -75,6 +78,8 @@ export class PlaylistController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 }
