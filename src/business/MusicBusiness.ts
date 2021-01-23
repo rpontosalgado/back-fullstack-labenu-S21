@@ -5,7 +5,7 @@ import NotFoundError from "../errors/NotFoundError";
 import UnauthorizedError from "../errors/UnauthorizedError";
 import UnprocessableEntityError from "../errors/UnprocessableEntityError";
 import {
-  GenreDTO, Music, MusicFilterDTO, MusicGenreDTO, MusicInputDTO
+  AlbumDTO, GenreDTO, Music, MusicFilterDTO, MusicGenreDTO, MusicInputDTO
 } from "../model/Music";
 import authenticator, {
   AuthenticationData, Authenticator
@@ -173,6 +173,72 @@ export class MusicBusiness {
       music.setGenres(musicGenres);
 
       return music;
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getGenreNames(token: string): Promise<string[]> {
+    try {
+      this.authenticator.getData(token);
+
+      const genres: string[] = await this.musicDatabase.getGenreNames();
+
+      return genres;
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getAlbums(token: string): Promise<AlbumDTO[]> {
+    try {
+      this.authenticator.getData(token);
+
+      const albums: AlbumDTO[] = await this.musicDatabase.getAlbums();
+
+      return albums;
+    } catch (error) {
+      const { code, message } = error;
+
+      if (
+        message === "jwt must be provided" ||
+        message === "jwt malformed" ||
+        message === "invalid token"
+      ) {
+        throw new UnauthorizedError("Invalid credentials");
+      }
+      
+      throw new BaseError(code || 400, message);
+    }
+  }
+
+  async getArtistNames(token: string): Promise<string[]> {
+    try {
+      this.authenticator.getData(token);
+
+      const artists: string[] = await this.musicDatabase.getArtistNames();
+
+      return artists;
     } catch (error) {
       const { code, message } = error;
 
