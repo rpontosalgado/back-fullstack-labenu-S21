@@ -179,7 +179,7 @@ export class MusicDatabase extends BaseDatabase {
     try {
       const result = await this.getConnection()
         .select('name')
-        .from(this.tableNames.music)
+        .from(this.tableNames.users)
         .groupBy('name')
         .orderBy('name');
 
