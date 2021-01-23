@@ -1,5 +1,5 @@
 import BaseError from "../errors/BaseError";
-import { GenreDTO, Music, MusicGenreDTO } from "../model/Music";
+import { AlbumDTO, GenreDTO, Music, MusicGenreDTO } from "../model/Music";
 import BaseDatabase from "./BaseDatabase";
 
 export class MusicDatabase extends BaseDatabase {
@@ -132,7 +132,6 @@ export class MusicDatabase extends BaseDatabase {
     }
   }
 
-
   async getMusicByArtistName(artist: string): Promise<Music[]> {
     try {
       const result = await this.getConnection()
@@ -143,6 +142,48 @@ export class MusicDatabase extends BaseDatabase {
         .orderBy("m.date", "desc");
 
       return result.map((music: any) => Music.toMusicModel(music));
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getGenreNames(): Promise<string[]> {
+    try {
+      const result: GenreDTO[] = await this.getConnection()
+        .select('name')
+        .from(this.tableNames.genres)
+        .orderBy('name');
+
+      return result.map(item => item.name);
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getAlbums(): Promise<AlbumDTO[]> {
+    try {
+      const result: AlbumDTO[] = await this.getConnection()
+        .select('m.album', 'u.name as artist')
+        .from(`${this.tableNames.music} as m`)
+        .join(`${this.tableNames.users} as u`, 'm.author_id', 'u.id')
+        .groupBy('m.album', 'u.name')
+        .orderBy('m.album', 'u.name');
+
+      return result;
+    } catch (error) {
+      throw new Error(error.sqlMessage || error.message);
+    }
+  }
+
+  async getArtistNames(): Promise<string[]> {
+    try {
+      const result = await this.getConnection()
+        .select('name')
+        .from(this.tableNames.music)
+        .groupBy('name')
+        .orderBy('name');
+
+      return result.map(item => item.name);
     } catch (error) {
       throw new Error(error.sqlMessage || error.message);
     }

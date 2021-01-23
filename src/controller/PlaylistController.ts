@@ -23,6 +23,8 @@ export class PlaylistController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 
@@ -42,6 +44,8 @@ export class PlaylistController {
     } catch (error) {
       const { code, message } = error;
       res.status(code || 400).send({ message });
+    } finally {
+      await BaseDatabase.destroyConnection();
     }
   }
 

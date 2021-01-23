@@ -109,3 +109,8 @@ export interface MusicFilterDTO {
   album: string | undefined;
   genre: string | undefined;
 }
+
+export interface AlbumDTO {
+  album: string;
+  name: string;
+}
