@@ -112,5 +112,5 @@ export interface MusicFilterDTO {
 
 export interface AlbumDTO {
   album: string;
-  name: string;
+  artist: string;
 }
