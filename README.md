@@ -26,7 +26,8 @@ Tabela de conteúdos
     * [Adicionar música à playlist](#adicionar-música-à-playlist)
     * [Leitura de playlist](#leitura-de-playlist)
     * [Apagar músicas da playlist](#apagar-músicas-da-playlist)
-  * [Tecnologias e Libs Utilizadas:](#tecnologias-e-libs-utilizadas)
+  * [Tecnologias e Libs utilizadas](#tecnologias-e-libs-utilizadas)
+  * [Recursos](#recursos)
   * [Pontos de melhoria](#pontos-de-melhoria)
   * [Autor](#autor)
 <!--te-->
@@ -301,18 +302,25 @@ Apagar músicas da playlist
 
   - `/playlist/:playlistId/music/:musicId`
 
-Tecnologias e Libs Utilizadas:
+Tecnologias e Libs utilizadas
 ==============================
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
 - [Node.js](https://nodejs.org/)
+
 - [TypeScript](https://www.typescriptlang.org/)
+
 - [Express](https://expressjs.com)
+
 - [Knex](http://knexjs.org/)
+
 - [bcryptjs](https://www.npmjs.com/package/bcryptjs)
+
 - [cors](https://www.npmjs.com/package/cors)
+
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
+
 - [uuid](https://www.npmjs.com/package/uuid)
 
 Recursos
