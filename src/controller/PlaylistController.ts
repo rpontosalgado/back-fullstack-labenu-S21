@@ -51,7 +51,7 @@ export class PlaylistController {
 
   async getPlaylist(req: Request, res: Response):Promise<void> {
     try {
-      const playlist: Playlist | Playlist []
+      const playlist: Playlist | Playlist[]
         = await PlaylistBusiness.getPlaylist(
           req.headers.authorization as string,
           req.params.id
