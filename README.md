@@ -19,7 +19,7 @@ Tabela de conteúdos
     * [Criação de música](#criação-de-música)
     * [Leitura de música](#leitura-de-música)
     * [Criação de playlist](#criação-de-playlist)
-    * [Adicionar música à playlist](#adicionar-música-a-playlist)
+    * [Adicionar música à playlist](#adicionar-música-à-playlist)
     * [Leitura de playlist](#leitura-de-playlist)
     * [Apagar músicas da playlist](#apagar-músicas-da-playlist)
   * [Tecnologias e Libs Utilizadas:](#tecnologias-e-libs-utilizadas)
