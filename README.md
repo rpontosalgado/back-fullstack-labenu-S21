@@ -333,6 +333,8 @@ Pontos de melhoria
 
   - Exemplos: `NORMAL`, `ADMIN`, `ARTIST`
 
+- Adicionar paginação para os endpoints de leitura que retornam uma grande quantidade de itens
+
 Autor
 =====
 
