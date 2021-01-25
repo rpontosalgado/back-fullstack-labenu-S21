@@ -10,6 +10,8 @@ Sistema que gerencia músicas.
 
 Deploy: [Heroku](https://back-fullstack-labenu-s21.herokuapp.com)
 
+![Badge](https://img.shields.io/badge/build-unstable-yellow)
+
 Tabela de conteúdos
 ===================
 
@@ -312,6 +314,11 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [cors](https://www.npmjs.com/package/cors)
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [uuid](https://www.npmjs.com/package/uuid)
+
+Recursos
+========
+
+Utilizando **banco de dados** fornecido pela e configurado pela [Labenu](https://www.labenu.com.br/) no curso `Desenvolvimento Web Full Stack`
 
 Pontos de melhoria
 ==================
