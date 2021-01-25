@@ -8,6 +8,8 @@ Descrição do projeto
 
 Sistema que gerencia músicas.
 
+Deploy: [Heroku](https://back-fullstack-labenu-s21.herokuapp.com)
+
 Tabela de conteúdos
 ===================
 
@@ -23,6 +25,7 @@ Tabela de conteúdos
     * [Leitura de playlist](#leitura-de-playlist)
     * [Apagar músicas da playlist](#apagar-músicas-da-playlist)
   * [Tecnologias e Libs Utilizadas:](#tecnologias-e-libs-utilizadas)
+  * [Pontos de melhoria](#pontos-de-melhoria)
   * [Autor](#autor)
 <!--te-->
 
@@ -309,6 +312,19 @@ As seguintes ferramentas foram usadas na construção do projeto:
 - [cors](https://www.npmjs.com/package/cors)
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [uuid](https://www.npmjs.com/package/uuid)
+
+Pontos de melhoria
+==================
+
+- Separar as entidades `album` e `genre` em modelos próprios para dar mais clareza e possibilidade de acrescentar mais informações
+
+  - A entidade `album` poderia ter `id` próprio e acumular mais informações, como imagem de capa e data de criação
+
+- Funcionalidades de remoção e edição de `music`, `user`, `album` e `playlist`
+
+- Definir `roles` para diferentes tipos de usuários com diferentes permissões
+
+  - Exemplos: `NORMAL`, `ADMIN`, `ARTIST`
 
 Autor
 =====
